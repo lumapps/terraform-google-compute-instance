@@ -4,7 +4,11 @@ variable "zone" {
   default = ""
 }
 
-variable "amount" {}
+variable "amount" {
+  description = "How many element of this ressource type you want to create."
+  default = 1
+}
+
 variable "name_prefix" {}
 variable "machine_type" {}
 
