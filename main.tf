@@ -80,7 +80,7 @@ resource "google_compute_instance" "instances" {
   zone = "${coalesce(var.zone, data.google_compute_zones.available.names[count.index % length(data.google_compute_zones.available.names)])}"
 
   machine_type = "${var.machine_type}"
-  tags         = ["${var.tag}"]
+  tags         = ["${var.tag == "" ? var.name_prefix : var.tag}"]
 
   boot_disk = {
     source      = "${google_compute_disk.boot-disks.*.name[count.index]}"
