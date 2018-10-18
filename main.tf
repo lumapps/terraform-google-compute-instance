@@ -3,6 +3,8 @@ data "google_compute_zones" "available" {
   status = "UP"
 }
 
+data "google_compute_default_service_account" "default_service_account" {}
+
 resource "google_compute_address" "static-addresses" {
   count  = "${var.amount}"
   name   = "${var.name_prefix}-${count.index}"
@@ -75,6 +77,7 @@ resource "google_compute_disk" "data-disks" {
 
 resource "google_compute_instance" "instances" {
   count = "${var.amount}"
+  allow_stopping_for_update = "${var.allow_stopping_for_update}"
 
   name = "${var.name_prefix}-${count.index+1}"
   zone = "${coalesce(var.zone, data.google_compute_zones.available.names[count.index % length(data.google_compute_zones.available.names)])}"
@@ -91,7 +94,10 @@ resource "google_compute_instance" "instances" {
     source = "${google_compute_disk.data-disks.*.name[count.index]}"
   }
 
-  //TODO: service account.
+  service_account = {
+    email = "${var.service_account == "" ? "" : (var.service_account == "default" ? data.google_compute_default_service_account.default_service_account.email : var.service_account)}"
+    scopes = "${split(", ", var.scopes)}"
+  }
 
   network_interface = {
     network = "${var.network}"
