@@ -47,7 +47,7 @@ resource "google_compute_disk" "boot-disks" {
 resource "google_compute_disk" "data-disks" {
   count = "${var.amount}"
 
-  name = "${var.name_prefix}-data-${count.index+1}"
+  name = "${var.name_prefix}-${count.index+1}-data"
   type = "${var.data_disk_type}"
   size = "${var.data_disk_size_gb}"
   zone = "${coalesce(var.zone, data.google_compute_zones.available.names[count.index % length(data.google_compute_zones.available.names)])}"
