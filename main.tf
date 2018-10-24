@@ -87,11 +87,13 @@ resource "google_compute_instance" "instances" {
 
   boot_disk = {
     source      = "${google_compute_disk.boot-disks.*.name[count.index]}"
+    device_name = "${google_compute_disk.boot-disks.*.name[count.index]}"
     auto_delete = false
   }
 
   attached_disk = {
     source = "${google_compute_disk.data-disks.*.name[count.index]}"
+    device_name = "${google_compute_disk.data-disks.*.name[count.index]}"
   }
 
   service_account = {
