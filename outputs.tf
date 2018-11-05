@@ -1,3 +1,7 @@
+output "names" {
+  value = "${google_compute_instance.instances.*.name}"
+}
+
 output "addresses" {
   value = "${google_compute_address.static-addresses.*.address}"
 }
